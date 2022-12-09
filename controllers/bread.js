@@ -3,9 +3,10 @@ const Bread = require('../models/bread')
 
 
 //get all bread
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const bread = await Bread.find()
     res.render('index', {
-        breads: Bread
+        breads: bread
     })
 })
 
@@ -14,37 +15,42 @@ router.get('/new', (req, res) => {
     res.render('new')
 })
 
-// get edit bread by index
-router.get('/:index/edit', (req, res) => {
-    const { index } = req.params
-    const bread = Bread[index]
+// get edit bread by index  async/await
+router.get('/:id/edit', async (req, res) => {
+    const { id } = req.params
+    const bread = await Bread.findById(id)
     res.render('edit', {
         bread,
-        index
     })
 })
 
-// get bread by index
-router.get('/:index', (req, res) => {
-    const { index } = req.params
+// get bread by index  asyn/await
+router.get('/:id', async (req, res) => {
+    const { id } = req.params
+    const bread = await Bread.findById(id)
     res.render('show', {
-        bread: Bread[index],
-        index
+        bread,
     })
 })
 
-router.post('/', (req, res) => {
+
+// POST: create a bread
+router.post('/', async (req, res) => {
     const { hasGluten, image } = req.body
-    if (!image) req.body.image = 'https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
+    if (!image) req.body.image = undefined
     if (hasGluten === 'on' ) {
         req.body.hasGluten = true
     } else {
         req.body.hasGluten = false
     }
-    Bread.push(req.body)
+
+    await Bread.create(req.body)
+
     res.redirect('/breads')
 })
 
+
+// PUT: Edit a bread async await
 router.put('/:index', (req, res) => {
     const { index } = req.params
     const { image, hasGluten } =req.body
@@ -59,7 +65,7 @@ router.put('/:index', (req, res) => {
     res.redirect(`/breads/${index}`)
 })
 
-// Delte a bread
+// Delte a bread async await
 router.delete('/:index', (req, res) => {
     const { index } = req.params
     Bread.splice(index, 1)
