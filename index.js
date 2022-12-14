@@ -5,6 +5,7 @@ const router = require('./controllers/bread')
 require('dotenv').config()
 
 const breadRoutes = require('./controllers/bread')
+const bakerRoutes = require('./controllers/baker')
 const bread = require('./models/bread')
 
 const app = express()
@@ -17,10 +18,12 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 
+//  Routes
 app.use('/breads', breadRoutes)
+app.use('/baker', bakerRoutes)
 
 app.get('/', (req, res) => {
-    res.send('<h1>main</h1>')
+    res.redirect('breads')
 })
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true})
