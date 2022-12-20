@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
     const bakers = await Baker.find().populate('breads')
     res.json(bakers)
 })
+
 // get baker by id asyn/await
 router.get('/:id', async (req, res) => {
     const { id } = req.params
@@ -26,7 +27,6 @@ router.get('/:id', async (req, res) => {
         baker,
     })
 })
-
 
 //delete baker by id
 router.delete('/:id', async (req, res) => {
